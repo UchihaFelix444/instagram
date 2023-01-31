@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "907696534035",
+    "project_id": "fluttergram-35c01",
+    "storage_bucket": "fluttergram-35c01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907696534035:android:e2b184da8b66b9c7fa45e6",
+        "android_client_info": {
+          "package_name": "com.uchiha.app.instagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "907696534035-5aao3bt2o6ds9s2clvs211hcqs0nduid.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4tddvmVRL8jhTCrldpy5Y54w3Ha4qYPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "907696534035-5aao3bt2o6ds9s2clvs211hcqs0nduid.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
