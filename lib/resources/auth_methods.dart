@@ -21,7 +21,7 @@ class AuthMethods
     String res = "Some error occured";
     try
     {
-       if(!(email.isEmpty || password.isEmpty || username.isEmpty || bio.isEmpty))
+       if(email.isNotEmpty && password.isNotEmpty && username.isNotEmpty && bio.isNotEmpty && file != null)
          {
               UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
 
@@ -42,6 +42,16 @@ class AuthMethods
               });
               res = "success";
          }
+    } on FirebaseAuthException catch (err)
+    {
+      if(err.code == 'invalid-email')
+        {
+          res = 'Email is badly formatted';
+        }
+      else if(err.code == 'weak-password')
+        {
+          res = 'Password should be atleast 6 characters';
+        }
     }
     catch(err)
     {

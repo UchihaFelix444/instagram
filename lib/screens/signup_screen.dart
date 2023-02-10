@@ -23,6 +23,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController bioController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
   Uint8List? image;
+  bool isLoading = false;
+
 
   @override
   void dispose() {
@@ -42,6 +44,22 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
+  void signUpUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(email: emailController.text, password: passwordController.text, username: userNameController.text, bio: bioController.text, file: image!);
+    if(res != "success")
+      {
+        showSnackBar(context, res);
+      }else
+        {
+          //
+        }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 //Space at the top
                 Flexible(flex: 2, child: Container()),
                 //Logo
-                SvgPicture.asset('assets/ic_instagram.svg', color: primaryColor, height: 64),
+                SvgPicture.asset('assets/ic_instagram.svg', color: primaryColor, height: 50),
                 const SizedBox(height: 12 ),
                 Stack(
                   children: [
@@ -110,10 +128,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 6),
                 //Login
                 InkWell(
-                  onTap: () async {
-                    String res = await AuthMethods().signUpUser(email: emailController.text, password: passwordController.text, username: userNameController.text, bio: bioController.text, file: image!);
-                    print(res);
-                  },
+                  onTap: signUpUser,
                   child: Container(
                     width: double.infinity,
                     alignment: Alignment.center,
@@ -126,10 +141,12 @@ class _SignupScreenState extends State<SignupScreen> {
                             )
                         )
                     ),
-                    child: const Text('Sign Up'),
+                    child: isLoading ? const Center(child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),) : const Text('Sign up'),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
                 Flexible(flex: 2, child: Container()),
                 //Transition
                 Row(
