@@ -15,12 +15,12 @@ class AuthMethods
     required String password,
     required String username,
     required String bio,
-    //required Uint8List file,
+    required Uint8List file,
   }) async {
     String res = "Some error occured";
     try
     {
-       if(email.isEmpty || password.isEmpty || username.isEmpty || bio.isEmpty)
+       if(!(email.isEmpty || password.isEmpty || username.isEmpty || bio.isEmpty || file != null))
          {
               UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
 
