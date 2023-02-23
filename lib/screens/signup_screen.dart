@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/resources/auth_methods.dart';
+import 'package:instagram/screens/login_screen.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:instagram/widgets/text_field_input.dart';
 
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/responsive_layout_screen.dart';
+import '../responsive/web_screen_layout.dart';
 import '../utils/utils.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -54,11 +58,24 @@ class _SignupScreenState extends State<SignupScreen> {
         showSnackBar(context, res);
       }else
         {
-          //
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const ResponsiveLayout(webScreenLayout: WebScreenLayout(), mobileScreenLayout: MobileScreenLayout()),
+            ),
+          );
         }
     setState(() {
       isLoading = false;
     });
+  }
+
+  void navigateToLogin()
+  {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
   }
 
   @override
@@ -156,15 +173,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 8
                       ),
-                      child: const Text("Don't have an account?"),
+                      child: const Text("Already have an account?"),
                     ),
                     GestureDetector(
-                      onTap: (){},
+                      onTap: navigateToLogin,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8
                         ),
-                        child: const Text("Sign up.",
+                        child: const Text("Login",
                           style: TextStyle(
                               fontWeight: FontWeight.bold
                           ),),

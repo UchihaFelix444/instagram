@@ -4,12 +4,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:instagram/resources/storage_methods.dart';
+import 'package:instagram/models/user.dart' as model;
 
 class AuthMethods
 {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  Future<model.User> getUserDetails() async{
+      User currentUser = firebaseAuth.currentUser!;
+
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).get();
+
+      return model.User.fromSnap(snapshot);
+  }
+
 
   Future<String> signUpUser({
     required String email,
@@ -29,17 +39,9 @@ class AuthMethods
 
               String photoUrl = await StorageMethods().uploadImageToStorage('profilePics', file, false);
 
+              model.User user = model.User(username: username, uid: userCredential.user!.uid, email: email, bio: bio, followers: [], following: [], photoUrl: photoUrl);
 
-              await firebaseFirestore.collection("users").doc(userCredential.user!.uid).set({
-                    "username" : username,
-                    "uid"      : userCredential.user!.uid,
-                    "email"    : email,
-                    "password" : password,
-                    "bio"      : bio,
-                    "followers": [],
-                    "following": [],
-                    "photoUrl" : photoUrl
-              });
+              await firebaseFirestore.collection("users").doc(userCredential.user!.uid).set(user.toJSON());
               res = "success";
          }
     } on FirebaseAuthException catch (err)
@@ -59,4 +61,39 @@ class AuthMethods
     }
     return res;
   }
+
+  Future<String> loginUser({ required String email, required String password}) async {
+      String res = "Some err occured";
+      try
+      {
+          if(email.isNotEmpty && password.isNotEmpty)
+            {
+              await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+              res = "success";
+              print(res);
+            }
+          else
+            {
+              res = "please enter all fields";
+              print(res);
+            }
+      } on FirebaseAuthException catch (err)
+      {
+        if(err.code == 'user-not-found')
+          {
+            res = 'User not found';
+          }
+        else if(err.code ==  'wrong-password')
+          {
+            res = 'Incorrect password';
+          }
+      }
+      catch(err)
+      {
+          print(res);
+          res = err.toString();
+      }
+      return res;
+  }
+
 }
